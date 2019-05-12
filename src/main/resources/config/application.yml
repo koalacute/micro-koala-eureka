@@ -1,0 +1,45 @@
+server:
+  port: 8761
+  session:
+    timeout: 30
+  tomcat:
+    max-threads: 1000
+    min-spare-threads: 100
+    accept-count: 5000
+
+spring:
+  application:
+    name: eureka-server
+  profiles:
+    active: local
+  cloud:
+    inetutils:
+      ignored-interfaces:
+        - docker0
+        - veth.*
+
+info:
+  app:
+    name: @project.artifactId@
+    encoding: @project.build.sourceEncoding@
+    java:
+      source: @java.version@
+      target: @java.version@
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+  server:
+    enable-self-preservation: false
+
+#appoint config to local
+---
+spring:
+  profiles: local
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    serviceUrl:
+      defaultZone: http://localhost:${server.port}/eureka/
